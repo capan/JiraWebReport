@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netcad Proje Portal Aylık Raporu</title>
+    <link rel="icon" href="https://yt3.ggpht.com/a-/AN66SAx8awmpjfcaWGowJvv9VKcc8JQryL9Jf-Domg=s900-mo-c-c0xffffffff-rj-k-no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <style>
+        .hidden{
+                display: none;
+            }
+            
+            table {
+                margin-left: 50px;
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 20%;
+                align-self: center;
+            }
+    
+            .table-wrapper-scroll-y {
+                display: block;
+                max-height: 380px;
+                overflow-y: auto;
+                -ms-overflow-style: -ms-autohiding-scrollbar;
+            }
+            td,
+            th {
+                border: 2px solid #dddddd;
+                text-align: center;
+                padding: 8px;
+            }
+            #chart {
+                max-width: 300px;
+                margin: 35px auto;
+                stroke: '14px';
+                margin-left: 50px;
+            }
+            #header {
+                color: #dddddd;
+                text-align: center;
+                margin-left: 50px;
+            }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body onload="monthFunction()" background="http://backgroundcheckall.com/wp-content/uploads/2017/12/custom-background-2.jpg">
+    <div>
+        <h2 id="header" style="color:#dddddd; text-align:center;">Ankara Talepleri</h2>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6" style="float:left;">
+            <button type="button" class="btn btn-success" onclick="location.href = 'https://portalrapor.herokuapp.com';">Genel
+                Durum
+                Raporuna</button>
+        </div>
+        <div class="col-sm-6" align="right">
+            <button type="button" class="btn btn-success" onclick="location.href = 'https://portalrapor.herokuapp.com/istanbul';">İstanbul
+                Raporuna</button>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-2" id="AnkPri" onclick="pieChartToggler('AnkPriChart','AnkPri')">
+            <h2 id="header">Önceliğe Göre</h2>
+            <table class="table table-dark " id='AnkPriTable'>
+                <tr>
+                    <th>
+                        <strong>Talep Önceliği</strong>
+                    </th>
+                    <th>
+                        <strong>Talep Miktarı</strong>
+                    </th>
+                </tr>
+                <tbody>
+                    <% for (var i=0; i < data2.rows.length; i++) { %>
+                    <tr>
+                        <th class="tag">
+                            <p>
+                                <%= data2.rows[i].row_to_json.degisken %>
+                            </p>
+                        </th>
+                        <th class="value">
+
+                            <%= data2.rows[i].row_to_json.miktar %>
+
+                        </th>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <div class="col-sm-4" id="AnkPriChartDiv">
+                <div id="AnkPriChart" class="AnkPriChart"></div>
+            </div>
+
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2" id="AnkSt" onclick="pieChartToggler('AnkStChart','AnkSt')">
+            <h2 id="header">Duruma Göre</h2>
+            <table class="table table-dark table-wrapper-scroll-y" id='AnkStTable'>
+                <tr>
+                    <th>
+                        <strong>Talep Durumu</strong>
+                    </th>
+                    <th>
+                        <strong>Talep Miktarı</strong>
+                    </th>
+                </tr>
+                <tbody>
+                    <% for (var i=0; i < data3.rows.length; i++) { %>
+                    <tr>
+                        <th class="tag">
+                            <p>
+                                <%= data3.rows[i].row_to_json.degisken %>
+                            </p>
+                        </th>
+                        <th class="value">
+                            <p>
+                                <%= data3.rows[i].row_to_json.miktar %>
+                            </p>
+                        </th>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <div class="col-sm-4" id="AnkStChartDiv">
+                <div id="AnkStChart" class="AnkStChart"></div>
+            </div>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2" id="AnkPrj" onclick="pieChartToggler('AnkPrjChart','AnkPrj')">
+            <h2 id="header">Projelere Göre</h2>
+            <table class="table table-wrapper-scroll-y table-dark " id='AnkPrjTable'>
+                <tr>
+                    <th>
+                        <strong>Proje</strong>
+                    </th>
+                    <th>
+                        <strong>Talep Miktarı</strong>
+                    </th>
+                </tr>
+                <tbody>
+                    <% for (var i=0; i < data4.rows.length; i++) { %>
+                    <tr>
+                        <th class="tag">
+                            <p>
+                                <%= data4.rows[i].row_to_json.degisken %>
+                            </p>
+                        </th>
+                        <th class="value">
+                            <p>
+                                <%= data4.rows[i].row_to_json.miktar %>
+                            </p>
+                        </th>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <div class="col-sm-4" id="AnkPrjChartDiv">
+                <div id="AnkPrjChart" class="AnkPrjChart"></div>
+            </div>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2" id="AnkAssg" onclick="pieChartToggler('AnkAssgChart','AnkAssg')">
+            <h2 id="header">Atanana Göre</h2>
+            <table class="table table-wrapper-scroll-y table-dark" id='AnkAssgTable'>
+                <tr>
+                    <th>
+                        <strong>Atanan Kişi</strong>
+                    </th>
+                    <th>
+                        <strong>Talep Miktarı</strong>
+                    </th>
+                </tr>
+                <tbody>
+                    <% for (var i=0; i < data5.rows.length; i++) { %>
+                    <tr>
+                        <th class="tag">
+                            <p>
+                                <%= data5.rows[i].row_to_json.degisken %>
+                            </p>
+                        </th>
+                        <th class="value">
+                            <p>
+                                <%= data5.rows[i].row_to_json.miktar %>
+                            </p>
+                        </th>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <div class="col-sm-4" id="AnkAssgChartDiv">
+                <div id="AnkAssgChart" class="AnkAssgChart"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="chart.js"></script>
+<script>
+    function monthFunction() {
+        var months = ['Ankara Ocak Ayı Raporu', 'Ankara Şubat Ayı Raporu', 'Ankara Mart Ayı Raporu', 'Ankara Nisan Ayı Raporu', 'Ankara Mayıs Ayı Raporu', 'Ankara Haziran Ayı Raporu',
+            'Ankara Temmuz Ayı Raporu', 'Ankara Ağustos Ayı Raporu', 'Ankara Eylül Ayı Raporu', 'Ankara Ekim Ayı Raporu', 'Ankara Kasım Ayı Raporu', 'Ankara Aralık Ayı Raporu'];
+        var d = new Date();
+        var n = d.getMonth() - 1;
+        document.getElementById("header").innerHTML = months[n];
+    }   
+</script>
+
+
+</html>

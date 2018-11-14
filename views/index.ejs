@@ -1,0 +1,330 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netcad Proje Portal Aylık Raporu</title>
+    <link rel="icon" href="https://yt3.ggpht.com/a-/AN66SAx8awmpjfcaWGowJvv9VKcc8JQryL9Jf-Domg=s900-mo-c-c0xffffffff-rj-k-no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .hidden{
+            display: none;
+        }
+        
+        table {
+            margin-left: 50px;
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 20%;
+            align-self: center;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+            max-height: 380px;
+            overflow-y: auto;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+        }
+        td,
+        th {
+            border: 2px solid #dddddd;
+            text-align: center;
+            padding: 8px;
+        }
+        #chart {
+            max-width: 380px;
+            margin: 35px auto;
+            stroke: '14px';
+            margin-left: 50px;
+        }
+        #header {
+            color: #dddddd;
+            text-align: center;
+            margin-left: 50px;
+        }
+        .dbtn {
+            background-color: DodgerBlue;
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            cursor: pointer;
+            font-size: 20px;
+            }
+
+/* Darker background on mouse-over */
+        .dbtn:hover {
+            background-color: RoyalBlue;
+}
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body onload="monthFunction()" background="http://backgroundcheckall.com/wp-content/uploads/2017/12/custom-background-2.jpg">
+    <h1 id="BiggestHeader" class="header" style="color:#dddddd; text-align: center"></h1>
+    <div style="float:right;">
+        <button type="button" class="btn btn-success" onclick="location.href = 'https://portalrapor.herokuapp.com/ankara';">Ankara
+            Raporuna</button>
+    </div>
+    <div class="row">
+        <div class="col-sm-3" id="GenelDurum">
+            <h2 id="header" data-toggle="tooltip" title="Tıkla!" onclick="pieChartToggler('GenelDurumChart','GenelDurum')">Genel Durum </h2>
+            <table class="table table-dark" id='GenelDurumTable'>
+                <tr id="GenelDurumTableHeader">
+                    <th>
+                        <strong>Destek Ekibi</strong>
+                    </th>
+                    <th>
+                        <strong>Açılan Talep Miktarı</strong>
+                    </th>
+                </tr>
+
+                <tbody>
+                    <tr>
+                        <th class="tag">
+                            YY ANKARA
+                        </th>
+                        <th class="value">
+
+                            <%= data1.rows[0].row_to_json.miktar %>
+
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="tag">
+
+                            YY İSTANBUL
+
+                        </th>
+                        <th class="value">
+
+                            <%= data1.rows[1].row_to_json.miktar %>
+
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>
+                                TOPLAM
+                            </p>
+                        </th>
+                        <th>
+                            <p>
+                                <%= data1.rows[2].row_to_json.miktar %>
+                            </p>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="col-sm-3" id="GenelDurumChartDiv">
+                <div id="GenelDurumChart" class="GenelDurumChart"></div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-3" id="GenelDurumPri" onclick="pieChartToggler('GenelDurumPriChart','GenelDurumPri')" style="margin-right: 40px;">
+            <h2 id="header">Önceliğe Göre Dağılım</h2>
+            <table class="table table-dark" id='GenelDurumPriTable'>
+                <tr id="GenelDurumPriTableHeader">
+                    <th>
+                        <strong>Öncelik</strong>
+                    </th>
+                    <th>
+                        <strong>Talep Miktarı</strong>
+                    </th>
+                </tr>
+
+                <tbody>
+                    <% for (var i=0; i < data10.rows.length; i++) { %>
+                    <tr>
+                        <th class="tag">
+
+                            <%= data10.rows[i].row_to_json.degisken %>
+
+                        </th>
+                        <th class="value">
+
+                            <%= data10.rows[i].row_to_json.miktar %>
+
+                        </th>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <div class="col-sm-3" id="GenelDurumPriChartDiv">
+                <div id="GenelDurumPriChar" class="GenelDurumPriChart"></div>
+            </div>
+        </div>
+
+        <div class="col-sm-3" style="align-items:left; font-size:20px; margin-right:5%; margin-top:5%;">
+            <h3 style="color:#ffffff">Bu ay ortalama Talep Çözülme Süresi:
+                <%= data1.rows[3].row_to_json.miktar %> gündür.</h3>
+            <h3 style="color:#ffffff">Bu ay
+                <a href="http://www.wiki-zero.co/wiki/en/Median" target="_blank">median</a> talep çözülme süresi
+                <%= data1.rows[4].row_to_json.miktar %> gündür. </h3>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-sm-2" id="GenelDurumSt" onclick="pieChartToggler('GenelDurumStChart','GenelDurumSt')" style="margin-right: 40px;">
+            <h2 id="header">Duruma Göre Dağılım</h2>
+            <table class="table table-dark table-bordered table-striped table-wrapper-scroll-y" id='GenelDurumStTable'>
+                <tr id="GenelDurumStTableHeader">
+                    <th>
+                        <strong>Talep Durumu</strong>
+                    </th>
+                    <th>
+                        <strong>Talep Miktarı</strong>
+                    </th>
+                </tr>
+
+                <tbody>
+                    <% for (var i=0; i < data11.rows.length; i++) { %>
+                    <tr>
+                        <th class="tag">
+
+                            <%= data11.rows[i].row_to_json.degisken %>
+
+                        </th>
+                        <th class="value">
+
+                            <%= data11.rows[i].row_to_json.miktar %>
+
+                        </th>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <div class="col-sm-3" id="GenelDurumStChartDiv">
+                <div id="GenelDurumStChar" class="GenelDurumStChart"></div>
+            </div>
+        </div>
+
+        <div class="col-sm-2" id="GenelDurumPrj" onclick="pieChartToggler('GenelDurumPrjChart','GenelDurumPrj')" style="margin-right: 40px;">
+            <h2 id="header">Projelere Göre Dağılım</h2>
+            <table class="table table-dark table-bordered table-striped table-wrapper-scroll-y" id='GenelDurumPrjTable'>
+                <tr id="GenelDurumPrjTableHeader">
+                    <th>
+                        <strong>Proje</strong>
+                    </th>
+                    <th>
+                        <strong>Talep Miktarı</strong>
+                    </th>
+                </tr>
+
+                <tbody>
+                    <% for (var i=0; i < data12.rows.length; i++) { %>
+                    <tr>
+                        <th class="tag">
+
+                            <%= data12.rows[i].row_to_json.degisken %>
+
+                        </th>
+                        <th class="value">
+
+                            <%= data12.rows[i].row_to_json.miktar %>
+
+                        </th>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <div class="col-sm-3" id="GenelDurumPrjChartDiv">
+                <div id="GenelDurumPrjChar" class="GenelDurumPrjChart"></div>
+            </div>
+        </div>
+
+        <div class="col-sm-2" id="GenelDurumAssg" onclick="pieChartToggler('GenelDurumAssgChart','GenelDurumAssg')">
+            <h2 id="header">Atanan Kişiye Göre Dağılım</h2>
+            <table class="table table-dark table-bordered table-striped table-wrapper-scroll-y" id='GenelDurumAssgTable'>
+                <tr id="GenelDurumAssgHeader">
+                    <th>
+                        <strong>Atanan</strong>
+                    </th>
+                    <th>
+                        <strong>Talep Miktarı</strong>
+                    </th>
+                </tr>
+
+                <tbody>
+                    <% for (var i=0; i < data13.rows.length; i++) { %>
+                    <tr>
+                        <th class="tag">
+                            <p>
+                                <%= data13.rows[i].row_to_json.degisken %>
+                            </p>
+                        </th>
+                        <th class="value">
+                            <p>
+                                <%= data13.rows[i].row_to_json.miktar %>
+                            </p>
+                        </th>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <div class="col-sm-2" id="GenelDurumAssgChartDiv">
+                <div id="GenelDurumAssgChar" class="GenelDurumAssgChart"></div>
+            </div>
+        </div>
+        <div class="col-sm-1">
+
+        </div>
+
+        <div class="col-sm-2" id="GenelDurumUserMean" onclick="pieChartToggler('GenelDurumUserMeanChart','GenelDurumUserMean')">
+            <h2 id="header">Ortalama Talep Çözme Süresi</h2>
+            <table class="table table-dark table-bordered table-striped table-wrapper-scroll-y" id='GenelDurumUserMeanTable'>
+                <tr id="GenelDurumUserMeanHeader">
+                    <th>
+                        <strong>Destek Elemanı</strong>
+                    </th>
+                    <th>
+                        <strong>Ortalama Süre (Gün)</strong>
+                    </th>
+                </tr>
+
+                <tbody>
+                    <% for (var i=0; i < data14.rows.length; i++) { %>
+                    <tr>
+                        <th class="tag">
+                            <p>
+                                <%= data14.rows[i].row_to_json.degisken %>
+                            </p>
+                        </th>
+                        <th class="value">
+                            <p>
+                                <%= data14.rows[i].row_to_json.miktar %>
+                            </p>
+                        </th>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <div class="col-sm-2" id="GenelDurumUserMeanChartDiv">
+                <div id="GenelDurumUserMeanChar" class="GenelDurumUserMeanChart"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- <button class="dbtn" style="width:100%"><i class="fa fa-download"></i>  Bu Raporu Excel Olarak İndir</button> -->
+
+</body>
+<script type="text/javascript" src="chart.js"></script>
+<script>
+
+    function monthFunction() {
+        var months = ['Ocak Ayı Raporu', 'Şubat Ayı Raporu', 'Mart Ayı Raporu', 'Nisan Ayı Raporu', 'Mayıs Ayı Raporu', 'Haziran Ayı Raporu',
+            'Temmuz Ayı Raporu', 'Ağustos Ayı Raporu', 'Eylül Ayı Raporu', 'Ekim Ayı Raporu', 'Kasım Ayı Raporu', 'Aralık Ayı Raporu'];
+        var d = new Date();
+        var n = d.getMonth() - 1;
+        document.getElementById("BiggestHeader").innerHTML = months[n];
+    }   
+</script>
+
+
+</html>
